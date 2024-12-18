@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;800&display=swap");
+
+:root {
+  --base-font-size: clamp(12px, 2.5vw, 16px);
+  --primary-color: #6c0cfe; /* Purple */
+  --secondary-color: #42a5f5; /* Light Blue */
+  --dark-background: #121212; /* Dark Background */
+  --dark-card-background: #1e1e1e; /* Dark Card Background */
+  --text-color: #ffffff;
+  --completed-task-color: #757575; /* Completed task color */
+  --inactive-task-color: #989898; /* Inactive task color */
+  --hover-bg-color: #8080809f; /* Hover effect for tasks and buttons */
+  --input-focus-color: #0078da; /* Focus effect color */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--dark-background);
+  padding: 10px;
+  font-size: var(--base-font-size);
+}
+
+.container {
+  background: var(--dark-card-background);
+  border-radius: 10px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  border-color: var(--input-focus-color);
+}
+
+button {
+  padding: 12px 20px;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #5202ca9f;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+li {
+  background-color: #3e3e3e;
+  color: white;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+li:hover {
+  background-color: var(--hover-bg-color);
+}
+
+li.completed {
+  text-decoration: line-through;
+  color: var(--completed-task-color);
+}
+
+a {
+  color: var(--secondary-color); /* Light Blue for action links */
+  text-decoration: none;
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+a:hover {
+  color: #1e88e5; /* Darker Blue when hovering */
+}
+
+a:active {
+  color: #1c6bb3; /* Even darker blue on active */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  * {
+    font-family: 'Arial Narrow', sans-serif;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  input[type="text"] {
+    width: 90%;
+  }
+
+  button {
+    width: 90%;
+  }
+
+  ul {
+    gap: 8px;
+  }
+
+  li {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  * {
+    font-family: 'Arial Narrow', sans-serif;
+  }
+  
+  body {
+    padding: 5px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  input[type="text"] {
+    width: 85%;
+  }
+
+  button {
+    width: 85%;
+  }
+
+  ul {
+    gap: 5px;
+  }
+
+  li {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
