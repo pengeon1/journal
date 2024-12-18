@@ -21,7 +21,7 @@ def save_tasks(tasks):
 @app.route('/')
 def index():
     tasks = load_tasks()
-    return render_template('index.html', tasks=tasks, editing=False)
+    return render_template('index.html', tasks=tasks)
 
 @app.route('/add', methods=['POST'])
 def add_task():
@@ -58,8 +58,7 @@ def edit_task(task_id):
             save_tasks(tasks)
         return redirect(url_for('index'))
     
-    # Pass 'editing=True' to render the task edit form
-    return render_template('index.html', tasks=tasks, task=task, task_id=task_id, editing=True)
+    return render_template('edit.html', task=task, task_id=task_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
