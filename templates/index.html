@@ -9,35 +9,31 @@
 <body>
     <div class="container">
         <h1>My To-Do List</h1>
-        
-        {% if editing %}
-        <!-- Editing Form -->
-        <form action="/edit/{{ task_id }}" method="POST">
-            <input type="text" name="task" id="taskInput" value="{{ task['text'] }}" required>
-            <button type="submit" id="saveTaskBtn">Save Task</button>
-        </form>
-        <a href="{{ url_for('index') }}">Back to Task List</a>
-        {% else %}
-        <!-- Add New Task Form -->
-        <form action="/add" method="POST">
-            <input type="text" name="task" id="taskInput" placeholder="Add a new task" required>
-            <button type="submit" id="addTaskBtn">Add Task</button>
-        </form>
 
-        <!-- Task List -->
-        <ul id="taskList">
+        {% if editing %}
+        <form action="/edit/{{ task_id }}" method="POST">
+            <input type="text" name="task" value="{{ task.text }}" required>
+            <button type="submit">Save Task</button>
+        </form>
+        {% else %}
+        <form action="/add" method="POST">
+            <input type="text" name="task" placeholder="Add a new task" required>
+            <button type="submit">Add Task</button>
+        </form>
+        {% endif %}
+
+        <ul>
             {% for task in tasks %}
-                <li class="{{ 'completed' if task['completed'] else '' }}">
-                    {{ task['text'] }}
-                    {% if not task['completed'] %}
-                        <a href="/complete/{{ loop.index0 }}">✔</a>
-                    {% endif %}
-                    <a href="/delete/{{ loop.index0 }}">❌</a>
-                    <a href="/edit/{{ loop.index0 }}">✎</a>
-                </li>
+            <li class="{{ 'completed' if task.completed else '' }}">
+                {{ task.text }}
+                {% if not task.completed %}
+                <a href="/complete/{{ task.id }}">✔</a>
+                {% endif %}
+                <a href="/delete/{{ task.id }}">❌</a>
+                <a href="/edit/{{ task.id }}">✎</a>
+            </li>
             {% endfor %}
         </ul>
-        {% endif %}
     </div>
 </body>
 </html>
