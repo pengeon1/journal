@@ -1,64 +1,65 @@
 from flask import Flask, render_template, request, redirect, url_for
-import json
-import os
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-TASKS_FILE = 'tasks.json'
+# Configure SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-# Function to read tasks from the JSON file
-def load_tasks():
-    if os.path.exists(TASKS_FILE):
-        with open(TASKS_FILE, 'r') as f:
-            return json.load(f)
-    return []
+# Define Task model
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(200), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
 
-# Function to save tasks to the JSON file
-def save_tasks(tasks):
-    with open(TASKS_FILE, 'w') as f:
-        json.dump(tasks, f, indent=4)
+# Function to initialize the database
+def initialize_database():
+    with app.app_context():
+        db.create_all()
 
 @app.route('/')
 def index():
-    tasks = load_tasks()
-    return render_template('index.html', tasks=tasks)
+    tasks = Task.query.all()
+    return render_template('index.html', tasks=tasks, editing=False)
 
 @app.route('/add', methods=['POST'])
 def add_task():
     task_text = request.form.get('task')
     if task_text:
-        tasks = load_tasks()
-        tasks.append({'text': task_text, 'completed': False})
-        save_tasks(tasks)
+        new_task = Task(text=task_text)
+        db.session.add(new_task)
+        db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/complete/<int:task_id>')
 def complete_task(task_id):
-    tasks = load_tasks()
-    tasks[task_id]['completed'] = True
-    save_tasks(tasks)
+    task = Task.query.get(task_id)
+    if task:
+        task.completed = True
+        db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/delete/<int:task_id>')
 def delete_task(task_id):
-    tasks = load_tasks()
-    tasks.pop(task_id)
-    save_tasks(tasks)
+    task = Task.query.get(task_id)
+    if task:
+        db.session.delete(task)
+        db.session.commit()
     return redirect(url_for('index'))
 
 @app.route('/edit/<int:task_id>', methods=['GET', 'POST'])
 def edit_task(task_id):
-    tasks = load_tasks()
-    task = tasks[task_id]
-    
+    task = Task.query.get(task_id)
     if request.method == 'POST':
         task_text = request.form.get('task')
-        if task_text:
-            task['text'] = task_text
-            save_tasks(tasks)
+        if task and task_text:
+            task.text = task_text
+            db.session.commit()
         return redirect(url_for('index'))
-    
-    return render_template('edit.html', task=task, task_id=task_id)
+    return render_template('index.html', tasks=Task.query.all(), task=task, task_id=task_id, editing=True)
 
 if __name__ == '__main__':
+    initialize_database()  # Initialize the database before starting the server
     app.run(debug=True)
